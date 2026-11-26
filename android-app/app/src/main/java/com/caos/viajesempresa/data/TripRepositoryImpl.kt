@@ -1,18 +1,18 @@
 package com.caos.viajesempresa.data
 
 import com.caos.viajesempresa.domain.model.Category
-import com.caos.viajesempresa.domain.model.Place
+import com.caos.viajesempresa.domain.model.Expense
 import com.caos.viajesempresa.domain.model.Trip
-import com.caos.viajesempresa.domain.repository.ViajesRepository
+import com.caos.viajesempresa.domain.repository.TripRepository
 
-class ViajesRepository(private val api: ViajeApiService) : ViajesRepository {
+class TripRepositoryImpl(private val api: ViajeApiService) : TripRepository {
 
     override suspend fun getTrips(): Result<List<Trip>> = runCatching {
         val response = api.getTrips()
         if (response.isSuccessful) {
             response.body()?.map { it.toDomain() } ?: emptyList()
         } else {
-            throw Exception("Error ${response.code()} al cargar viajes")
+            throw Exception("Error ${response.code()} al consultar viajes")
         }
     }
 
@@ -26,7 +26,7 @@ class ViajesRepository(private val api: ViajeApiService) : ViajesRepository {
         if (response.isSuccessful && response.body() != null) {
             response.body()!!.toDomain()
         } else {
-            throw Exception("Error ${response.code()} al guardar viaje")
+            throw Exception("Error ${response.code()} al crear viaje")
         }
     }
 
@@ -48,21 +48,26 @@ class ViajesRepository(private val api: ViajeApiService) : ViajesRepository {
         }
     }
 
-    override suspend fun addPlace(
+    override suspend fun saveExpense(
         tripId: String,
-        name: String,
         description: String,
-        city: String,
+        amount: Double,
         categoryId: Int,
-        tentativeDate: String
-    ): Result<Place> = runCatching {
-        val response = api.createPlace(
-            CreatePlaceRequest(tripId, name, description, city, categoryId, tentativeDate)
+        expenseDate: String
+    ): Result<Expense> = runCatching {
+        val request = CreatePlaceRequest(
+            tripId = tripId,
+            name = description,
+            description = description,
+            city = amount.toString(),
+            categoryId = categoryId,
+            tentativeDate = expenseDate
         )
+        val response = api.createPlace(request)
         if (response.isSuccessful && response.body() != null) {
-            response.body()!!.toDomain()
+            response.body()!!.toExpenseDomain()
         } else {
-            throw Exception("Error ${response.code()} al registrar lugar")
+            throw Exception("Error ${response.code()} al registrar el gasto")
         }
     }
 }

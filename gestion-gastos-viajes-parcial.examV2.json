@@ -1,0 +1,829 @@
+{
+  "schema_version": "1.0",
+  "exam_id": "gestion-gastos-viajes-android",
+  "title": "Gestión de viajes y gastos para Android",
+  "version": "1.0",
+  "description": "Evaluación de una aplicación Android para gestionar viajes y sus gastos. La aplicación permite consultar y crear viajes, consultar el detalle y los gastos asociados, registrar gastos, consultar categorías, calcular el total de gastos y validar la información ingresada.",
+  "statement_language": "es-CO",
+  "allowed_duration_seconds": null,
+  "allowed_ask_count": null,
+  "project_constraints": {
+    "platform": "Android",
+    "language": "Kotlin",
+    "ui_framework": "Jetpack Compose o interfaz Android equivalente",
+    "architecture": "MVVM con separación entre interfaz y lógica de negocio",
+    "backend": null,
+    "realtime_sync_required": false,
+    "authentication": {
+      "required": false
+    },
+    "team_project": false,
+    "public_repository_required": false,
+    "manual_presentation_language": "es-CO"
+  },
+  "documentation_rules": {
+    "accepted_globs": [
+      "docs/**/*.md",
+      "docs/**/*.pdf",
+      "*.md",
+      "*.pdf"
+    ]
+  },
+  "rubric_ref": "unified-android:v2",
+  "requirements": [
+    {
+      "id": "TRIP-LIST-001",
+      "type": "functional",
+      "title": "Consultar viajes registrados",
+      "description": "La aplicación muestra el listado de viajes registrados. Cada elemento presenta, como mínimo, el nombre y el destino del viaje.",
+      "weight": 0.1,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 1. Consultar viajes",
+        "reference": "REQ-01"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "TRIP-LIST-001-AC1",
+          "description": "La aplicación presenta una pantalla o sección con el listado de viajes registrados.",
+          "verification": [
+            "ui_inspection",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "TripListScreen",
+            "MyTripsScreen",
+            "TripViewModel",
+            "trip list"
+          ]
+        },
+        {
+          "id": "TRIP-LIST-001-AC2",
+          "description": "Cada viaje del listado muestra su nombre y destino.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "TripCard",
+            "TripItem",
+            "trip.name",
+            "trip.destination"
+          ]
+        },
+        {
+          "id": "TRIP-LIST-001-AC3",
+          "description": "La lista presenta viajes registrados en la fuente de datos de la aplicación y no únicamente elementos estáticos de demostración.",
+          "verification": [
+            "source_inspection",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "TripRepository",
+            "TripDao",
+            "TripDataSource"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-CREATE-001",
+        "TRIP-DETAIL-001"
+      ],
+      "tags": [
+        "trips",
+        "list",
+        "read"
+      ]
+    },
+    {
+      "id": "TRIP-CREATE-001",
+      "type": "functional",
+      "title": "Crear y registrar un viaje",
+      "description": "La aplicación permite registrar un viaje mediante un formulario con nombre, destino, fecha de inicio y fecha de finalización.",
+      "weight": 0.15,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 2. Crear viaje",
+        "reference": "REQ-02"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "TRIP-CREATE-001-AC1",
+          "description": "El formulario permite ingresar el nombre del viaje.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "CreateTripScreen",
+            "TripForm",
+            "name"
+          ]
+        },
+        {
+          "id": "TRIP-CREATE-001-AC2",
+          "description": "El formulario permite ingresar el destino del viaje.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "destination",
+            "DestinationField"
+          ]
+        },
+        {
+          "id": "TRIP-CREATE-001-AC3",
+          "description": "El formulario permite seleccionar o ingresar la fecha de inicio y la fecha de finalización.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "DatePicker",
+            "startDate",
+            "endDate"
+          ]
+        },
+        {
+          "id": "TRIP-CREATE-001-AC4",
+          "description": "Al guardar un viaje válido, la aplicación persiste el registro y permite consultarlo posteriormente.",
+          "verification": [
+            "unit_test",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "saveTrip",
+            "TripRepository",
+            "TripDao",
+            "CreateTripUseCase"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-LIST-001",
+        "TRIP-DETAIL-001",
+        "EXPENSE-VALID-001"
+      ],
+      "tags": [
+        "trips",
+        "create",
+        "form",
+        "persistence"
+      ]
+    },
+    {
+      "id": "TRIP-DETAIL-001",
+      "type": "functional",
+      "title": "Consultar detalle y resumen de gastos del viaje",
+      "description": "La aplicación permite seleccionar un viaje y consultar su información general junto con el resumen de los gastos registrados para ese viaje.",
+      "weight": 0.1,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 3. Consultar detalle del viaje",
+        "reference": "REQ-03"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "TRIP-DETAIL-001-AC1",
+          "description": "El usuario puede seleccionar un viaje desde el listado para abrir su detalle.",
+          "verification": [
+            "ui_inspection",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "TripListScreen",
+            "navigation",
+            "TripDetailScreen"
+          ]
+        },
+        {
+          "id": "TRIP-DETAIL-001-AC2",
+          "description": "El detalle muestra la información general del viaje, incluyendo nombre, destino y período de fechas.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "TripDetailScreen",
+            "trip.name",
+            "destination",
+            "startDate",
+            "endDate"
+          ]
+        },
+        {
+          "id": "TRIP-DETAIL-001-AC3",
+          "description": "El detalle presenta un resumen del total de gastos registrados para el viaje seleccionado.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection",
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "totalExpenses",
+            "ExpenseSummary",
+            "TripDetailViewModel"
+          ]
+        },
+        {
+          "id": "TRIP-DETAIL-001-AC4",
+          "description": "El resumen corresponde únicamente a los gastos asociados al viaje consultado.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "tripId",
+            "ExpenseRepository",
+            "filterByTrip"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-LIST-001",
+        "EXPENSE-LIST-001",
+        "EXPENSE-TOTAL-001"
+      ],
+      "tags": [
+        "trips",
+        "detail",
+        "summary",
+        "expenses"
+      ]
+    },
+    {
+      "id": "EXPENSE-LIST-001",
+      "type": "functional",
+      "title": "Consultar gastos asociados a un viaje",
+      "description": "La aplicación permite consultar el listado de gastos asociados al viaje seleccionado. Cada gasto muestra categoría, descripción, fecha y valor.",
+      "weight": 0.15,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 4. Consultar gastos",
+        "reference": "REQ-04"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-LIST-001-AC1",
+          "description": "La aplicación muestra los gastos asociados al viaje seleccionado.",
+          "verification": [
+            "ui_inspection",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "ExpenseListScreen",
+            "ExpenseList",
+            "ExpenseRepository",
+            "tripId"
+          ]
+        },
+        {
+          "id": "EXPENSE-LIST-001-AC2",
+          "description": "Cada gasto muestra su descripción y valor.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "ExpenseItem",
+            "description",
+            "amount"
+          ]
+        },
+        {
+          "id": "EXPENSE-LIST-001-AC3",
+          "description": "Cada gasto muestra su fecha y la categoría a la que pertenece.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "expenseDate",
+            "category",
+            "categoryName"
+          ]
+        },
+        {
+          "id": "EXPENSE-LIST-001-AC4",
+          "description": "Los gastos presentados corresponden al viaje consultado y no se mezclan con los de otros viajes.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "tripId",
+            "filterByTrip",
+            "ExpenseDao"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-DETAIL-001",
+        "EXPENSE-CREATE-001",
+        "EXPENSE-TOTAL-001"
+      ],
+      "tags": [
+        "expenses",
+        "list",
+        "read"
+      ]
+    },
+    {
+      "id": "EXPENSE-CREATE-001",
+      "type": "functional",
+      "title": "Registrar un gasto",
+      "description": "La aplicación permite registrar un gasto asociado a un viaje mediante un formulario que solicita descripción, valor, categoría y fecha del gasto.",
+      "weight": 0.2,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 5. Registrar gasto",
+        "reference": "REQ-05"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-CREATE-001-AC1",
+          "description": "Desde el contexto de un viaje, el usuario puede iniciar el registro de un gasto asociado a ese viaje.",
+          "verification": [
+            "ui_inspection",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "RegisterExpenseScreen",
+            "ExpenseForm",
+            "tripId"
+          ]
+        },
+        {
+          "id": "EXPENSE-CREATE-001-AC2",
+          "description": "El formulario permite ingresar la descripción del gasto.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "description",
+            "DescriptionField"
+          ]
+        },
+        {
+          "id": "EXPENSE-CREATE-001-AC3",
+          "description": "El formulario permite ingresar el valor del gasto.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "amount",
+            "value",
+            "AmountField"
+          ]
+        },
+        {
+          "id": "EXPENSE-CREATE-001-AC4",
+          "description": "El formulario permite seleccionar una categoría disponible para clasificar el gasto.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "CategoryDropdown",
+            "CategorySelector",
+            "categoryId"
+          ]
+        },
+        {
+          "id": "EXPENSE-CREATE-001-AC5",
+          "description": "El formulario permite seleccionar o ingresar la fecha del gasto.",
+          "verification": [
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "expenseDate",
+            "DatePicker"
+          ]
+        },
+        {
+          "id": "EXPENSE-CREATE-001-AC6",
+          "description": "Al guardar un gasto válido, la aplicación persiste el registro asociado al viaje correspondiente.",
+          "verification": [
+            "unit_test",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "saveExpense",
+            "ExpenseRepository",
+            "ExpenseDao",
+            "tripId"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "EXPENSE-LIST-001",
+        "CATEGORY-LIST-001",
+        "EXPENSE-VALID-001",
+        "EXPENSE-TOTAL-001"
+      ],
+      "tags": [
+        "expenses",
+        "create",
+        "form",
+        "persistence"
+      ]
+    },
+    {
+      "id": "CATEGORY-LIST-001",
+      "type": "functional",
+      "title": "Consultar categorías de gastos",
+      "description": "La aplicación permite consultar las categorías disponibles para clasificar los gastos y ofrece esas categorías como opciones al registrar un gasto.",
+      "weight": 0.05,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 6. Consultar categorías",
+        "reference": "REQ-06"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "CATEGORY-LIST-001-AC1",
+          "description": "La aplicación permite consultar u obtener las categorías disponibles para gastos.",
+          "verification": [
+            "source_inspection",
+            "unit_test",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "CategoryRepository",
+            "CategoryDao",
+            "CategoryViewModel",
+            "getCategories"
+          ]
+        },
+        {
+          "id": "CATEGORY-LIST-001-AC2",
+          "description": "Las categorías disponibles se presentan como opciones seleccionables en el formulario de registro de gastos.",
+          "verification": [
+            "ui_inspection",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "CategoryDropdown",
+            "DropdownMenu",
+            "CategorySelector"
+          ]
+        },
+        {
+          "id": "CATEGORY-LIST-001-AC3",
+          "description": "El gasto registrado conserva la referencia a la categoría seleccionada.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "categoryId",
+            "Expense",
+            "selectedCategory"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "EXPENSE-CREATE-001",
+        "EXPENSE-LIST-001"
+      ],
+      "tags": [
+        "categories",
+        "catalog",
+        "expenses"
+      ]
+    },
+    {
+      "id": "EXPENSE-TOTAL-001",
+      "type": "functional",
+      "title": "Calcular el total de gastos por viaje",
+      "description": "La aplicación calcula y muestra la suma de los valores de los gastos registrados para cada viaje.",
+      "weight": 0.1,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 7. Calcular total de gastos",
+        "reference": "REQ-07"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-TOTAL-001-AC1",
+          "description": "El sistema calcula el total sumando los valores de los gastos asociados al viaje seleccionado.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "calculateTotal",
+            "sumOf",
+            "ExpenseRepository",
+            "ExpenseCalculator"
+          ]
+        },
+        {
+          "id": "EXPENSE-TOTAL-001-AC2",
+          "description": "El total calculado se muestra en el detalle del viaje.",
+          "verification": [
+            "ui_inspection",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "ExpenseSummary",
+            "totalExpenses",
+            "TripDetailScreen"
+          ]
+        },
+        {
+          "id": "EXPENSE-TOTAL-001-AC3",
+          "description": "El total se actualiza al registrar un nuevo gasto y no incluye gastos pertenecientes a otros viajes.",
+          "verification": [
+            "unit_test",
+            "manual_review",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "Flow",
+            "observeExpenses",
+            "tripId",
+            "total recalculation"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-DETAIL-001",
+        "EXPENSE-LIST-001",
+        "EXPENSE-CREATE-001"
+      ],
+      "tags": [
+        "expenses",
+        "calculation",
+        "aggregation"
+      ]
+    },
+    {
+      "id": "EXPENSE-VALID-001",
+      "type": "functional",
+      "title": "Validar la información de viajes y gastos",
+      "description": "La aplicación valida los campos obligatorios de viajes y gastos, exige que el valor del gasto sea positivo y verifica que la fecha del gasto se encuentre dentro del período del viaje.",
+      "weight": 0.15,
+      "source": {
+        "file": "enunciado_gestion_gastos_viajes",
+        "section": "Requerimiento 8. Validar información",
+        "reference": "REQ-08"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-VALID-001-AC1",
+          "description": "La aplicación impide guardar un viaje si falta nombre, destino, fecha de inicio o fecha de finalización.",
+          "verification": [
+            "unit_test",
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "validateTrip",
+            "FormValidation",
+            "required fields"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC2",
+          "description": "La aplicación impide guardar un gasto si falta descripción, valor, categoría o fecha.",
+          "verification": [
+            "unit_test",
+            "ui_inspection",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "validateExpense",
+            "FormValidation",
+            "required fields"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC3",
+          "description": "La aplicación rechaza valores de gasto iguales a cero o negativos.",
+          "verification": [
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "amount > 0",
+            "validateAmount",
+            "ExpenseValidatorTest"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC4",
+          "description": "La fecha del gasto no puede ser anterior a la fecha de inicio del viaje.",
+          "verification": [
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "expenseDate",
+            "startDate",
+            "date validation"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC5",
+          "description": "La fecha del gasto no puede ser posterior a la fecha de finalización del viaje.",
+          "verification": [
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "expenseDate",
+            "endDate",
+            "date validation"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC6",
+          "description": "La aplicación valida que la fecha de inicio del viaje no sea posterior a la fecha de finalización.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "startDate",
+            "endDate",
+            "date range validation"
+          ]
+        },
+        {
+          "id": "EXPENSE-VALID-001-AC7",
+          "description": "Cuando la información no es válida, la aplicación informa el error y no persiste el registro inválido.",
+          "verification": [
+            "unit_test",
+            "ui_inspection",
+            "manual_review"
+          ],
+          "evidence_hints": [
+            "validation message",
+            "error state",
+            "saveExpense",
+            "saveTrip"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "TRIP-CREATE-001",
+        "EXPENSE-CREATE-001",
+        "EXPENSE-TOTAL-001"
+      ],
+      "tags": [
+        "validation",
+        "required-fields",
+        "positive-amount",
+        "dates"
+      ]
+    },
+    {
+      "id": "EXPENSE-MVVM-001",
+      "type": "technical",
+      "title": "Separación de responsabilidades mediante MVVM",
+      "description": "La solución separa la interfaz, el estado de presentación y la lógica de negocio mediante responsabilidades compatibles con MVVM. El cálculo de totales y las validaciones no deben estar implementados exclusivamente dentro de los componentes visuales.",
+      "weight": 0.0,
+      "source": {
+        "file": "criterio_arquitectura_android",
+        "section": "Rúbrica global unified-android:v1",
+        "reference": "D4. Arquitectura"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-MVVM-001-AC1",
+          "description": "Se identifican responsabilidades diferenciadas para interfaz (View), ViewModel y modelo/dominio.",
+          "verification": [
+            "source_inspection",
+            "static_analysis"
+          ],
+          "evidence_hints": [
+            "Screen",
+            "ViewModel",
+            "Model",
+            "Repository",
+            "UseCase"
+          ]
+        },
+        {
+          "id": "EXPENSE-MVVM-001-AC2",
+          "description": "La ViewModel no mantiene referencias a componentes visuales ni contiene funciones Composable.",
+          "verification": [
+            "source_inspection",
+            "static_analysis"
+          ],
+          "evidence_hints": [
+            "ViewModel",
+            "android.view",
+            "Activity",
+            "@Composable"
+          ]
+        },
+        {
+          "id": "EXPENSE-MVVM-001-AC3",
+          "description": "La lógica de cálculo del total y las reglas de validación pueden probarse sin ejecutar la interfaz gráfica.",
+          "verification": [
+            "source_inspection",
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "domain",
+            "ExpenseCalculator",
+            "ExpenseValidator",
+            "UseCase"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "EXPENSE-CREATE-001",
+        "EXPENSE-TOTAL-001",
+        "EXPENSE-VALID-001"
+      ],
+      "tags": [
+        "mvvm",
+        "architecture",
+        "separation-of-concerns"
+      ]
+    },
+    {
+      "id": "EXPENSE-TEST-001",
+      "type": "testing",
+      "title": "Pruebas unitarias de las funcionalidades principales",
+      "description": "El proyecto incluye pruebas unitarias ejecutables para verificar las operaciones de viajes y gastos, el cálculo de totales y las reglas de validación.",
+      "weight": 0.0,
+      "source": {
+        "file": "rubrica_global_android",
+        "section": "D2. Pruebas unitarias",
+        "reference": "unified-android:v1"
+      },
+      "acceptance_criteria": [
+        {
+          "id": "EXPENSE-TEST-001-AC1",
+          "description": "Existen pruebas unitarias ejecutables asociadas a las funcionalidades principales del proyecto.",
+          "verification": [
+            "unit_test",
+            "source_inspection"
+          ],
+          "evidence_hints": [
+            "src/test",
+            "JUnit",
+            "ExpenseViewModelTest",
+            "ExpenseRepositoryTest"
+          ]
+        },
+        {
+          "id": "EXPENSE-TEST-001-AC2",
+          "description": "Las pruebas cubren valores válidos, valores cero o negativos y fechas fuera del período del viaje.",
+          "verification": [
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "ExpenseValidatorTest",
+            "amount tests",
+            "date range tests"
+          ]
+        },
+        {
+          "id": "EXPENSE-TEST-001-AC3",
+          "description": "Las pruebas verifican el cálculo de la suma de gastos y su aislamiento por viaje.",
+          "verification": [
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "ExpenseCalculatorTest",
+            "calculateTotal",
+            "tripId"
+          ]
+        },
+        {
+          "id": "EXPENSE-TEST-001-AC4",
+          "description": "Las pruebas pueden ejecutarse mediante Gradle y sus resultados son observables.",
+          "verification": [
+            "build",
+            "unit_test"
+          ],
+          "evidence_hints": [
+            "./gradlew test",
+            "test reports",
+            "JUnit XML"
+          ]
+        }
+      ],
+      "related_requirements": [
+        "EXPENSE-CREATE-001",
+        "EXPENSE-TOTAL-001",
+        "EXPENSE-VALID-001"
+      ],
+      "tags": [
+        "testing",
+        "unit-tests"
+      ]
+    }
+  ]
+}

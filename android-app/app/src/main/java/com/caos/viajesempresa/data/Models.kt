@@ -1,7 +1,7 @@
 package com.caos.viajesempresa.data
 
 import com.caos.viajesempresa.domain.model.Category
-import com.caos.viajesempresa.domain.model.Place
+import com.caos.viajesempresa.domain.model.Expense
 import com.caos.viajesempresa.domain.model.Trip
 
 data class CategoryDto(
@@ -17,21 +17,25 @@ data class PlaceDto(
     val tripId: String? = "",
     val name: String,
     val description: String? = "",
-    val city: String,
+    val city: String? = "",
     val categoryId: Int,
     val category: CategoryDto? = null,
     val tentativeDate: String
 ) {
-    fun toDomain() = Place(
-        id = id ?: "",
-        tripId = tripId ?: "",
-        name = name,
-        description = description ?: "",
-        city = city,
-        categoryId = categoryId,
-        categoryName = category?.name ?: "",
-        tentativeDate = tentativeDate
-    )
+    fun toExpenseDomain(): Expense {
+        val parsedAmount = city?.toDoubleOrNull()
+            ?: name.replace("$", "").replace(",", "").trim().toDoubleOrNull()
+            ?: 0.0
+        return Expense(
+            id = id ?: "",
+            tripId = tripId ?: "",
+            description = description?.ifBlank { name } ?: name,
+            amount = parsedAmount,
+            categoryId = categoryId,
+            categoryName = category?.name ?: "",
+            expenseDate = tentativeDate
+        )
+    }
 }
 
 data class TripDto(
@@ -42,14 +46,18 @@ data class TripDto(
     val endDate: String,
     val places: List<PlaceDto>? = emptyList()
 ) {
-    fun toDomain() = Trip(
-        id = id ?: "",
-        name = name,
-        destination = destination,
-        startDate = startDate,
-        endDate = endDate,
-        places = places?.map { it.toDomain() } ?: emptyList()
-    )
+    fun toDomain(): Trip {
+        val idReal = id ?: ""
+        val mappedExpenses = places?.map { it.toExpenseDomain().copy(tripId = idReal) } ?: emptyList()
+        return Trip(
+            id = idReal,
+            name = name,
+            destination = destination,
+            startDate = startDate,
+            endDate = endDate,
+            expenses = mappedExpenses
+        )
+    }
 }
 
 data class CreateTripRequest(
@@ -67,3 +75,17 @@ data class CreatePlaceRequest(
     val categoryId: Int,
     val tentativeDate: String
 )
+
+interface TripRepository {
+    suspend fun getTrips(): Result<List<Trip>>
+    suspend fun createTrip(name: String, destination: String, startDate: String, endDate: String): Result<Trip>
+    suspend fun getTripDetail(tripId: String): Result<Trip>
+    suspend fun getCategories(): Result<List<Category>>
+    suspend fun saveExpense(
+        tripId: String,
+        description: String,
+        amount: Double,
+        categoryId: Int,
+        expenseDate: String
+    ): Result<Expense>
+}

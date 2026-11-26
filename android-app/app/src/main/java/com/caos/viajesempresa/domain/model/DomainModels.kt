@@ -4,10 +4,13 @@ data class Trip(
     val id: String,
     val name: String,
     val destination: String,
-    val startDate: String,
-    val endDate: String,
-    val places: List<Place> = emptyList()
-)
+    val startDate: String, // YYYY-MM-DD
+    val endDate: String,   // YYYY-MM-DD
+    val expenses: List<Expense> = emptyList()
+) {
+    val totalExpenses: Double
+        get() = expenses.sumOf { it.amount }
+}
 
 data class Category(
     val id: Int,
@@ -15,13 +18,12 @@ data class Category(
     val description: String
 )
 
-data class Place(
+data class Expense(
     val id: String,
     val tripId: String,
-    val name: String,
     val description: String,
-    val city: String,
+    val amount: Double,
     val categoryId: Int,
     val categoryName: String = "",
-    val tentativeDate: String
+    val expenseDate: String // YYYY-MM-DD
 )
